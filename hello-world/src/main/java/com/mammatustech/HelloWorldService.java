@@ -13,7 +13,7 @@ import io.advantageous.qbit.annotation.RequestMapping;
  *
  *     Access the service:
  *
- *    $ curl http://localhost:8080/hello/hello
+ *    $ curl http://localhost:8080/root/hello/hello
  *
  *
  *     To see swagger file for this service:
