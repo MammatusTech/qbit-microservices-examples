@@ -18,3 +18,15 @@ hs_err_pid*
 *.iws
 
 hello-world/build/tmp/jar/MANIFEST.MF
+
+todo/.gradle/2.2/taskArtifacts/taskArtifacts.bin
+
+todo/.gradle/2.2/taskArtifacts/cache.properties
+
+todo/.gradle/2.2/taskArtifacts/cache.properties.lock
+
+todo/.gradle/2.2/taskArtifacts/fileHashes.bin
+
+todo/.gradle/2.2/taskArtifacts/fileSnapshots.bin
+
+todo/.gradle/2.2/taskArtifacts/outputFileStates.bin
