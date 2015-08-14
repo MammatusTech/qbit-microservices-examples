@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile group: 'io.advantageous.qbit', name: 'qbit-admin', version: '0.8.16-RC2-SNAPSHOT'
-    compile group: 'io.advantageous.qbit', name: 'qbit-vertx', version: '0.8.16-RC2-SNAPSHOT'
+    compile group: 'io.advantageous.qbit', name: 'qbit-admin', version: '0.8.18-SNAPSHOT'
+    compile group: 'io.advantageous.qbit', name: 'qbit-vertx', version: '0.8.18-SNAPSHOT'
 
 }

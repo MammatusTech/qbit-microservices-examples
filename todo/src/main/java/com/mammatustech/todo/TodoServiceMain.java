@@ -14,6 +14,10 @@ public class TodoServiceMain {
                         .setRootURI("/v1") //Defaults to services
                         .setPort(8888); //Defaults to 8080 or environment variable PORT
 
+        managedServiceBuilder.getStatsDReplicatorBuilder().setHost("192.168.59.103");
+        managedServiceBuilder.setEnableStatsD(true);
+
+
         /* Start the service. */
         managedServiceBuilder.addEndpointService(new TodoService()) //Register TodoService
                 .getEndpointServerBuilder()
