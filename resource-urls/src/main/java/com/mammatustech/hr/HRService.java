@@ -2,9 +2,7 @@ package com.mammatustech.hr;
 
 
 
-import io.advantageous.qbit.annotation.PathVariable;
-import io.advantageous.qbit.annotation.RequestMapping;
-import io.advantageous.qbit.annotation.RequestMethod;
+import io.advantageous.qbit.annotation.*;
 
 import java.util.*;
 
@@ -82,5 +80,24 @@ public class HRService {
         Employee employee = getEmployee(departmentId, employeeId);
         return employee.getPhoneNumbers();
     }
+
+
+    @RequestMapping(value = "/kitchen/{departmentId}/employee/phoneNumber/kitchen/",
+            method = RequestMethod.POST)
+    public boolean addPhoneNumberKitchenSink(@PathVariable("departmentId") Integer departmentId,
+                                  @RequestParam("employeeId") Long employeeId,
+                                  @HeaderParam("X-PASS-CODE") String passCode,
+                                             PhoneNumber phoneNumber) {
+
+        if ("passcode".equals(passCode)) {
+            Employee employee = getEmployee(departmentId, employeeId);
+            employee.addPhoneNumber(phoneNumber);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
 }

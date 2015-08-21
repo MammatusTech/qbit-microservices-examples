@@ -43,8 +43,8 @@ public class DefaultApi {
 
   
   /**
-   * 
-   * 
+   * no summary
+   * no description
    * @return List<Department>
    */
   public List<Department> getDepartments () throws ApiException {
@@ -99,9 +99,9 @@ public class DefaultApi {
   }
   
   /**
-   * 
-   * 
-   * @param departmentId 
+   * no summary
+   * no description
+   * @param departmentId no description
    * @param body 
    * @return Boolean
    */
@@ -110,12 +110,12 @@ public class DefaultApi {
     
     // verify the required parameter 'departmentId' is set
     if (departmentId == null) {
-       throw new ApiException(400, "Missing the required parameter 'departmentId' when calling addDepartments");
+       throw new ApiException(400, "Missing the required parameter 'departmentId' when calling addDepartment");
     }
     
     // verify the required parameter 'body' is set
     if (body == null) {
-       throw new ApiException(400, "Missing the required parameter 'body' when calling addDepartments");
+       throw new ApiException(400, "Missing the required parameter 'body' when calling addDepartment");
     }
     
 
@@ -168,9 +168,9 @@ public class DefaultApi {
   }
   
   /**
-   * 
-   * 
-   * @param departmentId 
+   * no summary
+   * no description
+   * @param departmentId no description
    * @param body 
    * @return Boolean
    */
@@ -237,10 +237,10 @@ public class DefaultApi {
   }
   
   /**
-   * 
-   * 
-   * @param departmentId 
-   * @param employeeId 
+   * no summary
+   * no description
+   * @param departmentId no description
+   * @param employeeId no description
    * @return Employee
    */
   public Employee getEmployee (Integer departmentId, Integer employeeId) throws ApiException {
@@ -307,10 +307,10 @@ public class DefaultApi {
   }
   
   /**
-   * 
-   * 
-   * @param departmentId 
-   * @param employeeId 
+   * no summary
+   * no description
+   * @param departmentId no description
+   * @param employeeId no description
    * @return List<PhoneNumber>
    */
   public List<PhoneNumber> getPhoneNumbers (Integer departmentId, Integer employeeId) throws ApiException {
@@ -377,10 +377,10 @@ public class DefaultApi {
   }
   
   /**
-   * 
-   * 
-   * @param departmentId 
-   * @param employeeId 
+   * no summary
+   * no description
+   * @param departmentId no description
+   * @param employeeId no description
    * @param body 
    * @return Boolean
    */
@@ -415,6 +415,81 @@ public class DefaultApi {
 
     
 
+    
+
+    final String[] accepts = {
+      "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+      
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    if(contentType.startsWith("multipart/form-data")) {
+      boolean hasFields = false;
+      FormDataMultiPart mp = new FormDataMultiPart();
+      
+      if(hasFields)
+        postBody = mp;
+    }
+    else {
+      
+    }
+
+    try {
+      String[] authNames = new String[] {  };
+      String response = apiClient.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, accept, contentType, authNames);
+      if(response != null){
+        return (Boolean) apiClient.deserialize(response, "", Boolean.class);
+      }
+      else {
+        return null;
+      }
+    } catch (ApiException ex) {
+      throw ex;
+    }
+  }
+  
+  /**
+   * no summary
+   * no description
+   * @param departmentId no description
+   * @param body 
+   * @param employeeId no description
+   * @param X_PASS_CODE no description
+   * @return Boolean
+   */
+  public Boolean addPhoneNumberKitchenSink (Integer departmentId, PhoneNumber body, Integer employeeId, String X_PASS_CODE) throws ApiException {
+    Object postBody = body;
+    
+    // verify the required parameter 'departmentId' is set
+    if (departmentId == null) {
+       throw new ApiException(400, "Missing the required parameter 'departmentId' when calling addPhoneNumberKitchenSink");
+    }
+    
+    // verify the required parameter 'body' is set
+    if (body == null) {
+       throw new ApiException(400, "Missing the required parameter 'body' when calling addPhoneNumberKitchenSink");
+    }
+    
+
+    // create path and map variables
+    String path = "/hr/kitchen/{departmentId}/employee/phoneNumber/kitchen/".replaceAll("\\{format\\}","json")
+      .replaceAll("\\{" + "departmentId" + "\\}", apiClient.escapeString(departmentId.toString()));
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, String> formParams = new HashMap<String, String>();
+
+    
+    queryParams.addAll(apiClient.parameterToPairs("", "employeeId", employeeId));
+    
+
+    if (X_PASS_CODE != null)
+    headerParams.put("X-PASS-CODE", apiClient.parameterToString(X_PASS_CODE));
     
 
     final String[] accepts = {

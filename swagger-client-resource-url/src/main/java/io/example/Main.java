@@ -55,6 +55,12 @@ public class Main {
             defaultApi.addPhoneNumber(1, 3, phoneNumber);
 
 
+            PhoneNumber pn = new PhoneNumber();
+            pn.setPhoneNumber("408-555-1213");
+
+            defaultApi.addPhoneNumberKitchenSink(1, pn, 3, "passcode");
+
+
             departments = defaultApi.getDepartments();
 
             departments.forEach(new Consumer<Department>() {
