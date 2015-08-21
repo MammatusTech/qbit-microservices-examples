@@ -19,26 +19,15 @@ hs_err_pid*
 
 hello-world/build/tmp/jar/MANIFEST.MF
 
-todo/.gradle/2.2/taskArtifacts/taskArtifacts.bin
+todo/.gradle/
 
-todo/.gradle/2.2/taskArtifacts/cache.properties
+todo-async/.gradle/
 
-todo/.gradle/2.2/taskArtifacts/cache.properties.lock
+resource-urls/.idea/
 
-todo/.gradle/2.2/taskArtifacts/fileHashes.bin
+resource-urls/.gradle/
 
-todo/.gradle/2.2/taskArtifacts/fileSnapshots.bin
+swagger-client-resource-url/.idea/
 
-todo/.gradle/2.2/taskArtifacts/outputFileStates.bin
 
-todo-async/.gradle/2.2/taskArtifacts/cache.properties
-
-todo-async/.gradle/2.2/taskArtifacts/cache.properties.lock
-
-todo-async/.gradle/2.2/taskArtifacts/fileHashes.bin
-
-todo-async/.gradle/2.2/taskArtifacts/fileSnapshots.bin
-
-todo-async/.gradle/2.2/taskArtifacts/outputFileStates.bin
-
-todo-async/.gradle/2.2/taskArtifacts/taskArtifacts.bin
+swagger-client-resource-url/.gradle/
