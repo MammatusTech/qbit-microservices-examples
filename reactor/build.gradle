@@ -1,0 +1,25 @@
+group 'qbit-ex'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+
+compileJava {
+    sourceCompatibility = 1.8
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    //compile group: 'com.github.advantageous', name: 'qbit-admin', version: '0.8.19-RC2'
+    //compile group: 'com.github.advantageous', name: 'qbit-vertx', version: '0.8.19-RC2'
+    //
+
+    compile group: 'io.advantageous.qbit', name: 'qbit-admin', version: '0.8.19-SNAPSHOT'
+    compile group: 'io.advantageous.qbit', name: 'qbit-vertx', version: '0.8.19-SNAPSHOT'
+
+}

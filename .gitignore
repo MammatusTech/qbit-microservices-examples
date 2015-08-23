@@ -31,3 +31,6 @@ swagger-client-resource-url/.idea/
 
 
 swagger-client-resource-url/.gradle/
+
+reactor/.gradle/
+reactor/.idea/

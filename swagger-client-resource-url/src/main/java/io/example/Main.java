@@ -36,6 +36,8 @@ public class Main {
 
         boolean success = defaultApi.addDepartment(1, department);
 
+        System.out.println("Added department");
+
 
         List<Department> departments = defaultApi.getDepartments();
 
@@ -54,11 +56,16 @@ public class Main {
             phoneNumber.setPhoneNumber("555-1212");
             defaultApi.addPhoneNumber(1, 3, phoneNumber);
 
+            System.out.println("Added phone number");
+
+
 
             PhoneNumber pn = new PhoneNumber();
             pn.setPhoneNumber("408-555-1213");
 
             defaultApi.addPhoneNumberKitchenSink(1, pn, 3, "passcode");
+
+            System.out.println("Added phone number with passcode");
 
 
             departments = defaultApi.getDepartments();
@@ -74,6 +81,9 @@ public class Main {
                     });
                 }
             });
+        } else {
+
+            System.out.println("Unable to handle add department");
         }
     }
 
