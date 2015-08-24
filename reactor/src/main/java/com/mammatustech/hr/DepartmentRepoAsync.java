@@ -4,7 +4,7 @@ package com.mammatustech.hr;
 import io.advantageous.qbit.reactive.Callback;
 
 /**
- * Async interface to DepartmentRepo internal service.
+ * Async interface to DepartmentCassandraRepo internal service.
  *
  */
 public interface DepartmentRepoAsync {
@@ -17,4 +17,4 @@ public interface DepartmentRepoAsync {
      void addDepartment(final Callback<Boolean> callback,
                         final Department department);
 
-}
+ }

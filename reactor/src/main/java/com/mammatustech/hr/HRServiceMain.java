@@ -77,20 +77,47 @@ public class HRServiceMain {
                                 .build();
 
 
-        /* Build the service queue for DepartmentRepo. */
+        /* Build the service queue for DepartmentCassandraRepo. */
         final ServiceQueue departmentRepoServiceQueue = managedServiceBuilder
-                .createServiceBuilderForServiceObject(new DepartmentRepo()).build();
+                .createServiceBuilderForServiceObject(new DepartmentCassandraRepo()).build();
 
-        departmentRepoServiceQueue.startServiceQueue().startCallBackHandler();
+        departmentRepoServiceQueue
+                .startServiceQueue()
+                .startCallBackHandler();
 
         /* Build the remote interface for department repo. */
         final DepartmentRepoAsync departmentRepoAsync =
                 departmentRepoServiceQueue.createProxy(DepartmentRepoAsync.class);
 
+        /* Build the service queue for Solr indexer. */
+        final ServiceQueue solrDepartmentIndexerQueue = managedServiceBuilder
+                .createServiceBuilderForServiceObject(new DepartmentSolrIndexer()).build();
+
+        solrDepartmentIndexerQueue
+                .startServiceQueue()
+                .startCallBackHandler();
+
+        /* Build the remote interface for department repo. */
+        final DepartmentRepoAsync deptSolrRepo =
+                solrDepartmentIndexerQueue.createProxy(DepartmentRepoAsync.class);
+
+
+        /* Build the service queue for auth service. */
+        final ServiceQueue authServiceQueue = managedServiceBuilder
+                .createServiceBuilderForServiceObject(new AuthServiceImpl()).build();
+
+        authServiceQueue
+                .startServiceQueue()
+                .startCallBackHandler();
+
+        /* Build the remote interface for the auth service. */
+        final AuthService authService =
+                authServiceQueue.createProxy(AuthService.class);
 
 
         /* Start the service. */
-        managedServiceBuilder.addEndpointService(new HRService(reactor, departmentRepoAsync)) //Register HRService
+        managedServiceBuilder.addEndpointService(new HRService(reactor, departmentRepoAsync,
+                deptSolrRepo, authService)) //Register HRService
                 .getEndpointServerBuilder()
                 .build().startServer();
 

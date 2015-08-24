@@ -45,6 +45,8 @@ public class Main {
 
         if (success) {
 
+            System.out.println("#### Added department");
+
             Employee noah = new Employee();
             noah.setName("Noah");
             noah.setId(3L);

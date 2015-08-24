@@ -3,7 +3,9 @@ package com.mammatustech.hr;
 
 
 import io.advantageous.qbit.annotation.*;
+import io.advantageous.qbit.reactive.AsyncFutureCallback;
 import io.advantageous.qbit.reactive.Callback;
+import io.advantageous.qbit.reactive.CallbackBuilder;
 import io.advantageous.qbit.reactive.Reactor;
 
 import java.util.*;
@@ -18,43 +20,74 @@ public class HRService {
     private final Map<Integer, Department> departmentMap = new HashMap<>();
 
     private final Reactor reactor;
-    private final DepartmentRepoAsync departmentRepoAsync;
+    private final DepartmentRepoAsync solrIndexer;
+    private final DepartmentRepoAsync cassandraStore;
+    private final AuthService authService;
 
     /**
      * Construct a new HR REST Service.
      * @param reactor reactor
-     * @param departmentRepoAsync async interface to DepartmentStore
+     * @param cassandraStore async interface to DepartmentStore
+     * @param solrIndexer async interface to SOLR Service
      */
-    public HRService(final Reactor reactor, final DepartmentRepoAsync departmentRepoAsync) {
+    public HRService(final Reactor reactor,
+                     final DepartmentRepoAsync cassandraStore,
+                     final DepartmentRepoAsync solrIndexer,
+                     final AuthService authService) {
         this.reactor = reactor;
-        this.reactor.addServiceToFlush(departmentRepoAsync);
-        this.departmentRepoAsync = departmentRepoAsync;
+        this.reactor.addServiceToFlush(cassandraStore);
+        this.reactor.addServiceToFlush(solrIndexer);
+        this.reactor.addServiceToFlush(authService);
+        this.cassandraStore = cassandraStore;
+        this.solrIndexer = solrIndexer;
+        this.authService = authService;
     }
 
     /**
      * Add a new department
-     * @param callback callback
+     * @param clientCallback callback
      * @param departmentId department id
      * @param department department
      */
     @RequestMapping(value = "/department/{departmentId}/", method = RequestMethod.POST)
-    public void addDepartment(final Callback<Boolean> callback, @PathVariable("departmentId") Integer departmentId,
-                              final Department department) {
+    public void addDepartment(final Callback<Boolean> clientCallback,
+                              @PathVariable("departmentId") Integer departmentId,
+                              final Department department,
+                              @HeaderParam(value="username", defaultValue = "noAuth")
+                                  final String userName) {
 
-        final Callback<Boolean> repoCallback = reactor.callbackBuilder()
-                .setCallback(Boolean.class, succeeded -> {
-                    departmentMap.put(departmentId, department);
-                    callback.accept(succeeded);
-                }).setOnTimeout(() -> {
-                    // callback.accept(false); One way.
-                    // callback.onTimeout(); Another way
-                    callback.onError(
+        final CallbackBuilder callbackBuilder = reactor.callbackBuilder()
+                .setOnTimeout(() -> {
+                    clientCallback.onError(
                             new TimeoutException("Timeout can't add department " + departmentId));
-                }).setOnError(error -> {
-                    callback.onError(error);
-                }).build();
+                }).setOnError(clientCallback::onError);
 
-        departmentRepoAsync.addDepartment(repoCallback, department);
+
+        authService.allowedToAddDepartment(callbackBuilder.setCallback(Boolean.class, allowed -> {
+            if (allowed) {
+                doAddDepartment(clientCallback, callbackBuilder, department);
+            } else {
+                clientCallback.onError(new SecurityException("Go away!"));
+            }
+        }).build(), userName,  departmentId);
+
+
+    }
+
+    private void doAddDepartment(final Callback<Boolean> clientCallback,
+                                 final CallbackBuilder callbackBuilder,
+                                 final Department department) {
+
+        final Callback<Boolean> callbackDeptRepo = callbackBuilder.setCallback(Boolean.class, addedDepartment -> {
+
+            departmentMap.put((int)department.getId(), department);
+            clientCallback.accept(addedDepartment);
+
+            solrIndexer.addDepartment(indexedOk -> {
+            }, department);
+        }).build();
+
+        cassandraStore.addDepartment(callbackDeptRepo, department);
 
     }
 
