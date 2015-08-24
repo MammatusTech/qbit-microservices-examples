@@ -3,12 +3,10 @@ package com.mammatustech.hr;
 
 
 import io.advantageous.qbit.annotation.*;
-import io.advantageous.qbit.reactive.AsyncFutureCallback;
 import io.advantageous.qbit.reactive.Callback;
 import io.advantageous.qbit.reactive.Reactor;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /** This is the public REST interface to the Human Resources services.
@@ -48,8 +46,12 @@ public class HRService {
                     departmentMap.put(departmentId, department);
                     callback.accept(succeeded);
                 }).setOnTimeout(() -> {
-                    //callback.accept(false);
-                    callback.onError(new TimeoutException("Timeout can't add department" + departmentId));
+                    // callback.accept(false); One way.
+                    // callback.onTimeout(); Another way
+                    callback.onError(
+                            new TimeoutException("Timeout can't add department " + departmentId));
+                }).setOnError(error -> {
+                    callback.onError(error);
                 }).build();
 
         departmentRepoAsync.addDepartment(repoCallback, department);
