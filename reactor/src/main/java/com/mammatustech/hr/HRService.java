@@ -3,12 +3,12 @@ package com.mammatustech.hr;
 
 
 import io.advantageous.qbit.annotation.*;
-import io.advantageous.qbit.reactive.AsyncFutureCallback;
 import io.advantageous.qbit.reactive.Callback;
 import io.advantageous.qbit.reactive.CallbackBuilder;
 import io.advantageous.qbit.reactive.Reactor;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /** This is the public REST interface to the Human Resources services.
@@ -41,6 +41,14 @@ public class HRService {
         this.cassandraStore = cassandraStore;
         this.solrIndexer = solrIndexer;
         this.authService = authService;
+
+        this.reactor.addRepeatingTask(1, TimeUnit.SECONDS, () -> {
+            manageCache();
+        });
+    }
+
+    private void manageCache() {
+        System.out.println("Manage Cache");
     }
 
     /**
@@ -60,7 +68,9 @@ public class HRService {
                 .setOnTimeout(() -> {
                     clientCallback.onError(
                             new TimeoutException("Timeout can't add department " + departmentId));
-                }).setOnError(clientCallback::onError);
+                }).setOnError(clientCallback::onError)
+                .setTimeoutDuration(200)
+                .setTimeoutTimeUnit(TimeUnit.MILLISECONDS);
 
 
         authService.allowedToAddDepartment(callbackBuilder.setCallback(Boolean.class, allowed -> {
