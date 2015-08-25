@@ -3,6 +3,8 @@ package com.mammatustech;
 
 import io.advantageous.qbit.admin.ManagedServiceBuilder;
 import io.advantageous.qbit.annotation.RequestMapping;
+import io.advantageous.qbit.meta.builder.ContextMetaBuilder;
+import io.advantageous.qbit.metrics.support.StatsDReplicatorBuilder;
 
 /**
  * Default port for admin is 7777.
@@ -66,6 +68,10 @@ public class HelloWorldService {
         final ManagedServiceBuilder managedServiceBuilder =
                 ManagedServiceBuilder.managedServiceBuilder().setRootURI("/root");
 
+
+
+        turnOnStatsD(managedServiceBuilder);
+
         /* Start the service. */
         managedServiceBuilder.addEndpointService(new HelloWorldService())
                 .getEndpointServerBuilder()
@@ -75,6 +81,20 @@ public class HelloWorldService {
         managedServiceBuilder.getAdminBuilder().build().startServer();
 
         System.out.println("Servers started");
+
+
+    }
+
+    private static void turnOnStatsD(ManagedServiceBuilder managedServiceBuilder) {
+
+        managedServiceBuilder.getContextMetaBuilder().setTitle("Hello World");
+
+        /** Turn on statsD support. */
+        StatsDReplicatorBuilder statsDReplicatorBuilder = managedServiceBuilder.setEnableStatsD(true)
+                .getStatsDReplicatorBuilder();
+
+        statsDReplicatorBuilder.setHost("192.168.59.103");
+
 
 
     }

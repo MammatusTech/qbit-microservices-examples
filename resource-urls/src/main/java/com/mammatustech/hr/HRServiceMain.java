@@ -64,6 +64,10 @@ public class HRServiceMain {
                         .setRootURI("/v1") //Defaults to services
                         .setPort(8888); //Defaults to 8080 or environment variable PORT
 
+
+        /** Turn on statsD support. */
+        managedServiceBuilder.setEnableStats(true).getStatsDReplicatorBuilder().setHost("192.168.59.103");
+
         /* Start the service. */
         managedServiceBuilder.addEndpointService(new HRService()) //Register TodoService
                 .getEndpointServerBuilder()
