@@ -5,8 +5,8 @@
 Qbit Microservices Examples
 
 
-1. [QBit Microservice Hello World](https://github.com/MammatusTech/qbit-microservices-examples/wiki/Getting-started-with-QBit-Microservice-Lib)
-2. [QBit Reactive programming](https://github.com/MammatusTech/qbit-microservices-examples/wiki/Reactor-tutorial--%7C-reactively-handling-async-calls-with-QBit-Reactive-Microservices)
+1. [QBit Microservice Hello World tutorial](https://github.com/MammatusTech/qbit-microservices-examples/wiki/Getting-started-with-QBit-Microservice-Lib)
+2. [QBit Microservice Reactive programming tutorial](https://github.com/MammatusTech/qbit-microservices-examples/wiki/Reactor-tutorial--%7C-reactively-handling-async-calls-with-QBit-Reactive-Microservices)
 
 
 
