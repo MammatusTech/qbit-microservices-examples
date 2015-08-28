@@ -1,4 +1,4 @@
-# qbit-microservices-examples
+# Qbit Microservices Examples
 
 
 ## Tutorials and examples
