@@ -1,19 +1,17 @@
+[-qbit docs-](https://github.com/advantageous/qbit/wiki)
+
 ![Mammatus Tech](http://www.mammatustech.com/_/rsrc/1242100869097/config/app/images/customLogo/customLogo.gif?revision=6)
-
-# Qbit Microservices Examples
-
 
 ## Tutorials and examples
 Qbit Microservices Examples
 
 
 1. [QBit Microservice Hello World tutorial](https://github.com/MammatusTech/qbit-microservices-examples/wiki/Getting-started-with-QBit-Microservice-Lib)
+2. [QBit Microservice Hello World Part 2](Getting-started-with-QBit-Microservices-Lib-Batteries-Included)
+2. [QBit Microservice Hello World Health Checks](Getting-started-with-QBit-Microservices-Health-Checks)
+2. [QBit Microservice Hello World Stats, Metrics, and Monitoring](Getting-started-with-QBit-Microservices-Stats-KPI-Metrics-Monitoring)
+3. [QBit Microservices: RESTful Java Microserices](QBit-Microservices-Java-Lib-RESTful)
 2. [QBit Microservice Reactive programming tutorial](https://github.com/MammatusTech/qbit-microservices-examples/wiki/Reactor-tutorial--%7C-reactively-handling-async-calls-with-QBit-Reactive-Microservices)
-
-
-
-
-
 
 
 
