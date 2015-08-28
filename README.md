@@ -7,7 +7,12 @@ Qbit Microservices Examples
 
 
 
-Background information.
+
+
+
+
+
+## Background information.
 
 [Reactive Programming](http://rick-hightower.blogspot.com/2015/03/reactive-programming-service-discovery.html), [Java Microservices](http://rick-hightower.blogspot.com/2015/03/java-microservices-architecture.html), [Rick Hightower](http://www.linkedin.com/in/rickhigh)
 
