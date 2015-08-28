@@ -1,3 +1,5 @@
+![Mammatus Tech](http://www.mammatustech.com/_/rsrc/1242100869097/config/app/images/customLogo/customLogo.gif?revision=6)
+
 # Qbit Microservices Examples
 
 
