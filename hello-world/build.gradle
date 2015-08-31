@@ -20,6 +20,11 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
+apply plugin: 'application'
+
+
+mainClassName = "com.mammatustech.HelloWorldService"
+
 
 compileJava {
     sourceCompatibility = 1.8
