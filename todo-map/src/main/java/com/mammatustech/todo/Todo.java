@@ -17,14 +17,27 @@ public class Todo {
 
     private final long createTime;
 
+    private final Category parent;
+
     public Todo(String name, String description, long createTime) {
         this.name = name;
         this.description = description;
         this.createTime = createTime;
 
         this.id = name + "::" + createTime;
+        parent = null;
     }
 
+
+
+    public Todo(String name, String description, long createTime, Category parent) {
+        this.name = name;
+        this.description = description;
+        this.createTime = createTime;
+
+        this.id = name + "::" + createTime;
+        this.parent = parent;
+    }
 
     public String getId() {
         if (id == null) {
@@ -62,5 +75,9 @@ public class Todo {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (int) (createTime ^ (createTime >>> 32));
         return result;
+    }
+
+    public Category getParent() {
+        return parent;
     }
 }

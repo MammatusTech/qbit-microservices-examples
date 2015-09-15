@@ -1,13 +1,24 @@
 package com.mammatustech.hr;
 
+import io.advantageous.qbit.annotation.Description;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
+
+@Description("An employee")
 public class Employee {
 
+
+    @Description("An id")
     private final long id;
+
+    @Description("A name")
     private final String name;
+
+
+    @Description("A list of phone numbers")
     private List<PhoneNumber> phoneNumbers;
 
 
