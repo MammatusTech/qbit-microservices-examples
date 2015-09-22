@@ -1,7 +1,6 @@
 package com.mammatustech.todo;
 
 import io.advantageous.boon.core.reflection.MapperSimple;
-import io.advantageous.boon.core.reflection.fields.FieldsAccessor;
 import io.advantageous.qbit.annotation.RequestMapping;
 import io.advantageous.qbit.annotation.RequestMethod;
 import io.advantageous.qbit.annotation.RequestParam;
