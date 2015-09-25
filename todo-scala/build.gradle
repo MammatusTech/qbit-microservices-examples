@@ -3,9 +3,11 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'scala'
 
 
-mainClassName = "com.mammatustech.todo.TodoServiceMain"
+
+mainClassName = "com.mammatustech.todo.Main"
 
 compileJava {
     sourceCompatibility = 1.8
@@ -20,5 +22,10 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'io.advantageous.qbit', name: 'qbit-admin', version: '0.9.0.M5-SNAPSHOT'
     compile group: 'io.advantageous.qbit', name: 'qbit-vertx3', version: '0.9.0.M5-SNAPSHOT'
+    compile 'org.scala-lang:scala-library:2.11.5'
+}
 
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.useAnt = false
 }

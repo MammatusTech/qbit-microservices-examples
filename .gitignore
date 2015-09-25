@@ -40,3 +40,8 @@ todo/.gradle/
 hello-world/.gradle/
 todo-map/.gradle/
 todo-map/.idea/
+
+todo-scala/.gradle/
+todo-scala/.idea/
+todo-scala/build/
+
