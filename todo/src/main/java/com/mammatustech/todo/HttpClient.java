@@ -7,7 +7,7 @@ public class HttpClient {
 
     public static void main(final String... args) throws Exception {
 
-        for (int index = 0; index < 100; index++) {
+        for (int index = 0; index < 5; index++) {
 
             HTTP.postJSON("http://localhost:8888/v1/todo-service/todo",
                     JsonFactory.toJson(new Todo("name" + index,

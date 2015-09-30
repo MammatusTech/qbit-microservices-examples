@@ -64,7 +64,7 @@ class TodoService {
     summary = "adds todo",
     returnDescription = "returns true if successful")
   def add(todo: Todo) = {
-    todoMap.put(todo.id, todo)
+    todoMap.put(todo.getId, todo)
     true
   }
 

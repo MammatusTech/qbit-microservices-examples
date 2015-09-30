@@ -3,6 +3,7 @@ package com.mammatustech.todo;
 import io.advantageous.qbit.annotation.RequestMapping;
 import io.advantageous.qbit.annotation.RequestMethod;
 import io.advantageous.qbit.annotation.RequestParam;
+import io.advantageous.qbit.reactive.Callback;
 
 import java.util.*;
 
@@ -62,6 +63,20 @@ public class TodoService {
 
     private final Map<String, Todo> todoMap = new TreeMap<>();
 
+    @RequestMapping(value = "/ping", method = RequestMethod.GET,
+            description = "ping", summary = "ping",
+            returnDescription = "returns true if successful")
+    public boolean ping() {
+        return true;
+    }
+
+
+    @RequestMapping(value = "/ping2", method = RequestMethod.GET,
+            description = "ping2", summary = "ping2",
+            returnDescription = "returns true if successful")
+    public void ping2(Callback<Boolean> callback) {
+        callback.accept(true);
+    }
 
     @RequestMapping(value = "/todo", method = RequestMethod.POST,
             description = "add a todo item to the list", summary = "adds todo",
@@ -84,7 +99,7 @@ public class TodoService {
 
 
 
-    @RequestMapping(value = "/todo", method = RequestMethod.GET,
+    @RequestMapping(value = "/todo/", method = RequestMethod.GET,
             description = "List all items in the system",  summary = "list items",
             returnDescription = "return list of all items in system")
     public List<Todo> list() {
