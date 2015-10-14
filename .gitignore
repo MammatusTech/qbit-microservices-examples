@@ -19,6 +19,8 @@ hs_err_pid*
 
 hello-world/build/tmp/jar/MANIFEST.MF
 
+hello-world-scala/build/tmp/jar/MANIFEST.MF
+
 todo/.gradle/
 
 todo-async/.gradle/
