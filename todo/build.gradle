@@ -22,3 +22,7 @@ dependencies {
     compile 'com.github.advantageous:qbit-admin:0.9.1-RC2'
 
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
