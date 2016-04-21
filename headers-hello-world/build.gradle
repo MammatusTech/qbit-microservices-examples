@@ -36,3 +36,7 @@ dependencies {
     compile group: 'io.advantageous.qbit', name: 'qbit-vertx', version: '0.8.19-SNAPSHOT'
 
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}

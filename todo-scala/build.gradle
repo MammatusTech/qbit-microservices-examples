@@ -29,3 +29,7 @@ dependencies {
 tasks.withType(ScalaCompile) {
     scalaCompileOptions.useAnt = false
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}

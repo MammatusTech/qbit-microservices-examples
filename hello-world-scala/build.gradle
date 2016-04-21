@@ -18,7 +18,7 @@
 group 'qbit-example'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
+//apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'application'
 
@@ -42,4 +42,8 @@ dependencies {
 
     compile 'org.scala-lang:scala-library:2.11.7'
 
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
 }
