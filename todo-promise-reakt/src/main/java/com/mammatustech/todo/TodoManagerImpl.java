@@ -1,29 +1,34 @@
 package com.mammatustech.todo;
 
-import io.advantageous.qbit.annotation.*;
+import io.advantageous.qbit.annotation.QueueCallback;
+import io.advantageous.qbit.annotation.RequestParam;
 import io.advantageous.qbit.reactive.Callback;
 import io.advantageous.qbit.service.stats.StatsCollector;
 import io.advantageous.reakt.reactor.Reactor;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static io.advantageous.qbit.annotation.QueueCallbackType.*;
 
-
-@RequestMapping("/todo-service")
-public class TodoService {
+public class TodoManagerImpl  {
 
 
     private final Map<String, Todo> todoMap = new TreeMap<>();
 
-    /** Used to manage callbacks and such. */
+    /**
+     * Used to manage callbacks and such.
+     */
     private final Reactor reactor;
 
-    /** Stats Collector for KPIs. */
+    /**
+     * Stats Collector for KPIs.
+     */
     private final StatsCollector statsCollector;
 
-    public TodoService(Reactor reactor, StatsCollector statsCollector) {
+    public TodoManagerImpl(Reactor reactor, StatsCollector statsCollector) {
         this.reactor = reactor;
         this.statsCollector = statsCollector;
 
@@ -35,7 +40,6 @@ public class TodoService {
     }
 
 
-    @RequestMapping(value = "/todo", method = RequestMethod.POST)
     public void add(final Callback<Boolean> callback, final Todo todo) {
 
         /** Send KPI add.called every time the add method gets called. */
@@ -45,20 +49,16 @@ public class TodoService {
     }
 
 
-
-    @RequestMapping(value = "/todo", method = RequestMethod.DELETE)
     public void remove(final Callback<Boolean> callback, final @RequestParam("id") String id) {
 
         /** Send KPI add.removed every time the remove method gets called. */
         statsCollector.increment("todoservice.remove.called");
         Todo remove = todoMap.remove(id);
-        callback.accept(remove!=null);
+        callback.accept(remove != null);
 
     }
 
 
-
-    @RequestMapping(value = "/todo", method = RequestMethod.GET)
     public void list(final Callback<ArrayList<Todo>> callback) {
 
         /** Send KPI add.list every time the list method gets called. */
