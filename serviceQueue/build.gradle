@@ -1,0 +1,29 @@
+group 'qbit-ex'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+
+apply plugin: 'application'
+
+
+mainClassName = "com.mammatustech.todo.TodoServiceMain"
+
+
+compileJava {
+    sourceCompatibility = 1.8
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'io.advantageous.qbit:qbit-vertx:1.8.5'
+    compile 'io.advantageous.qbit:qbit-admin:1.8.5'
+    compile 'io.advantageous.reakt:reakt:2.8.14'
+
+
+}

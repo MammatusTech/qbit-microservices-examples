@@ -4,7 +4,6 @@ import io.advantageous.qbit.annotation.*;
 import io.advantageous.qbit.reactive.Callback;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 import static io.advantageous.qbit.annotation.QueueCallbackType.EMPTY;
 import static io.advantageous.qbit.annotation.QueueCallbackType.IDLE;
