@@ -1,8 +1,7 @@
 package com.mammatustech.todo;
 
-import io.advantageous.qbit.service.ServiceBuilder;
-import io.advantageous.qbit.service.ServiceQueue;
-import io.advantageous.qbit.time.Duration;
+import io.advantageous.qbit.service.ServiceBundle;
+import io.advantageous.qbit.service.ServiceBundleBuilder;
 import io.advantageous.qbit.util.Timer;
 import io.advantageous.reakt.promise.Promise;
 import io.advantageous.reakt.promise.Promises;
@@ -16,32 +15,59 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static io.advantageous.qbit.service.ServiceBuilder.serviceBuilder;
+import static io.advantageous.qbit.service.ServiceBundleBuilder.serviceBundleBuilder;
+import static io.advantageous.qbit.service.ServiceProxyUtils.flushServiceProxy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TodoManagerImplTest {
 
-    TodoManagerClient client;
-    ServiceQueue serviceQueue;
-    final Timer timer = Timer.timer();
+
+    private final Timer timer = Timer.timer();
+
+    /** Object address to the todoManagerImpl service actor. */
+    private final String todoAddress = "todoService";
+    /** Object address to the auditorService service actor. */
+    private final String auditorAddress = "auditorService";
+    /** Service Bundle */
+    private ServiceBundle serviceBundle;
+    /** Client service proxy to the todoManager */
+    private TodoManagerClient client;
+    /** Client service proxy to the auditor. */
+    private Auditor auditor;
 
     @Before
     public void setup() {
 
-        // Create a serviceQueue with a serviceBuilder.
-        final ServiceBuilder serviceBuilder = serviceBuilder();
 
-        //Start the serviceQueue.
-        serviceQueue = serviceBuilder
-                .setServiceObject(new TodoManagerImpl())
-                .buildAndStartAll();
+        /* Create the serviceBundleBuilder. */
+        final ServiceBundleBuilder serviceBundleBuilder = serviceBundleBuilder();
+
+        /* Create the service bundle. */
+        serviceBundle = serviceBundleBuilder.build();
+
+        /* Add the AuditorImpl instance to the serviceBundle. */
+        serviceBundle.addServiceObject(auditorAddress, new AuditorImpl());
+
+        /* Create a service client proxy for the auditor. */
+        auditor = serviceBundle.createLocalProxy(Auditor.class, auditorAddress);
+
+        /* Create a todo manager and pass the client proxy of the auditor to it. */
+        final TodoManagerImpl todoManager = new TodoManagerImpl(auditor);
+
+        // Add the todoManager to the serviceBundle.
+        serviceBundle
+                .addServiceObject(todoAddress, todoManager);
 
         //Create a client proxy to communicate with the service actor.
-        client = serviceQueue.createProxyWithAutoFlush(TodoManagerClient.class,
-                Duration.milliseconds(5));
+        client = serviceBundle.createLocalProxy(TodoManagerClient.class, todoAddress);
+
+        // Start the service bundle.
+        serviceBundle.start();
+
 
     }
+
 
     @Test
     public void test() throws Exception {
@@ -50,6 +76,7 @@ public class TodoManagerImplTest {
         // Add the todo item.
         client.add(new Todo("write", "Write tutorial", timer.time()))
                 .invokeWithPromise(promise);
+        flushServiceProxy(client);
 
 
         assertTrue("The call was successful", promise.success());
@@ -59,6 +86,10 @@ public class TodoManagerImplTest {
 
         // Get a list of todo items.
         client.list().invokeWithPromise(promiseList);
+
+        // Call flush since this is not an auto-flush. */
+        flushServiceProxy(client);
+
 
         // See if the Todo item we created is in the listing.
         final List<Todo> todoList = promiseList.get().stream()
@@ -72,13 +103,14 @@ public class TodoManagerImplTest {
         // Remove promise
         final Promise<Boolean> removePromise = Promises.blockingPromiseBoolean();
         client.remove(todoList.get(0).getId()).invokeWithPromise(removePromise);
-
+        flushServiceProxy(client);
 
 
         final Promise<List<Todo>> promiseList2 = Promises.blockingPromiseList(Todo.class);
 
         // Make sure it is removed.
         client.list().invokeWithPromise(promiseList2);
+        flushServiceProxy(client);
 
         // See if the Todo item we created is removed.
         final List<Todo> todoList2 = promiseList2.get().stream()
@@ -87,6 +119,10 @@ public class TodoManagerImplTest {
 
         // Make sure we don't find it.
         assertEquals("Make sure there is one", 0, todoList2.size());
+
+        flushServiceProxy(client);
+
+
 
     }
 
@@ -114,13 +150,15 @@ public class TodoManagerImplTest {
         Promises.all(promises).then(done -> {
             success.set(true);
             latch.countDown();
-        }).catchError(e-> {
+        }).catchError(e -> {
             success.set(false);
             latch.countDown();
         });
 
         /** Invoke the promises. */
         promises.forEach(Promise::invoke);
+        flushServiceProxy(client);
+
 
         /** They are all going to come back async. */
         latch.await();
@@ -128,8 +166,9 @@ public class TodoManagerImplTest {
     }
 
     @After
-    public void tearDown() {
-        serviceQueue.stop();
+    public void tearDown() throws Exception{
+        Thread.sleep(100);
+        serviceBundle.stop();
     }
 
 
