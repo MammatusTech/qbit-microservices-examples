@@ -26,14 +26,14 @@ public class TodoServiceMain {
 
         /** Create the management bundle for this service. */
         final ServiceManagementBundle serviceManagementBundle =
-                serviceManagementBundleBuilder().setServiceName("TodoService")
+                serviceManagementBundleBuilder().setServiceName("TodoServiceImpl")
                         .setManagedServiceBuilder(managedServiceBuilder).build();
 
-        final TodoService todoService = new TodoService(serviceManagementBundle);
+        final TodoService todoService = new TodoServiceImpl(serviceManagementBundle);
 
         /* Start the service. */
         managedServiceBuilder
-                //Register TodoService
+                //Register TodoServiceImpl
                 .addEndpointServiceWithServiceManagmentBundle(todoService, serviceManagementBundle)
                 //Build and start the server.
                 .startApplication();
