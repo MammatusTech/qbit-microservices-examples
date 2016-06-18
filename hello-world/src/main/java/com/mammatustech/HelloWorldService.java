@@ -4,10 +4,12 @@ package com.mammatustech;
 import io.advantageous.qbit.admin.ManagedServiceBuilder;
 import io.advantageous.qbit.annotation.RequestMapping;
 
+import static io.advantageous.qbit.admin.ManagedServiceBuilder.managedServiceBuilder;
+
 /**
  * Default port for admin is 7777.
  * Default port for main endpoint is 8080.
- *
+ * <p>
  * <pre>
  * <code>
  *
@@ -57,14 +59,14 @@ import io.advantageous.qbit.annotation.RequestMapping;
 public class HelloWorldService {
 
 
-    @RequestMapping("/hello")
-    public String hello() {
-        return "hello " + System.currentTimeMillis();
-    }
-
     public static void main(final String... args) {
         final ManagedServiceBuilder managedServiceBuilder =
-                ManagedServiceBuilder.managedServiceBuilder().setRootURI("/root");
+                managedServiceBuilder()
+                        .setRootURI("/root");
+
+
+        managedServiceBuilder.getContextMetaBuilder().setTitle("Hello World");
+
 
         /* Start the service. */
         managedServiceBuilder.addEndpointService(new HelloWorldService())
@@ -77,6 +79,11 @@ public class HelloWorldService {
         System.out.println("Servers started");
 
 
+    }
+
+    @RequestMapping("/hello")
+    public String hello() {
+        return "hello " + System.currentTimeMillis();
     }
 
 
