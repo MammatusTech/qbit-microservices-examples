@@ -2,70 +2,46 @@ package com.mammatustech.todo;
 
 
 import io.advantageous.qbit.admin.ManagedServiceBuilder;
-import io.advantageous.qbit.service.stats.StatsCollector;
-import io.advantageous.reakt.reactor.Reactor;
+import io.advantageous.qbit.admin.ServiceManagementBundle;
 
 import java.net.URI;
-import java.time.Duration;
-import java.util.Objects;
+
+import static io.advantageous.qbit.admin.ManagedServiceBuilder.managedServiceBuilder;
+import static io.advantageous.qbit.admin.ServiceManagementBundleBuilder.serviceManagementBundleBuilder;
 
 public class TodoServiceMain {
 
 
     public static void main(final String... args) throws Exception {
 
-        //To test locally use https://hub.docker.com/r/samuelebistoletti/docker-statsd-influxdb-grafana/
-        final URI statsdURI = URI.create("udp://192.168.99.100:8125");
-
-        //For timer
-        final Reactor reactor = Reactor.reactor();
 
 
         /* Create the ManagedServiceBuilder which manages a clean shutdown, health, stats, etc. */
-        final ManagedServiceBuilder managedServiceBuilder =
-                ManagedServiceBuilder.managedServiceBuilder()
-                        .setRootURI("/v1") //Defaults to services
-                        .setPort(8888); //Defaults to 8080 or environment variable PORT
+        final ManagedServiceBuilder managedServiceBuilder = managedServiceBuilder()
+                .setRootURI("/v1") //Defaults to services
+                .setPort(8888); //Defaults to 8080 or environment variable PORT
 
-        enableStatsD(managedServiceBuilder, statsdURI);
+        managedServiceBuilder.enableStatsD(URI.create("udp://192.168.99.100:8125"));
+        managedServiceBuilder.getContextMetaBuilder().setTitle("TodoMicroService");
 
-        StatsCollector statsCollector = managedServiceBuilder.createStatsCollector();
+        /** Create the management bundle for this service. */
+        final ServiceManagementBundle serviceManagementBundle =
+                serviceManagementBundleBuilder().setServiceName("TodoService")
+                        .setManagedServiceBuilder(managedServiceBuilder).build();
 
-
+        final TodoService todoService = new TodoService(serviceManagementBundle);
 
         /* Start the service. */
-        managedServiceBuilder.addEndpointService(new TodoService(reactor, statsCollector)) //Register TodoService
-                .getEndpointServerBuilder()
-                .build().startServer();
+        managedServiceBuilder
+                //Register TodoService
+                .addEndpointServiceWithServiceManagmentBundle(todoService, serviceManagementBundle)
+                //Build and start the server.
+                .startApplication();
 
         /* Start the admin builder which exposes health end-points and swagger meta data. */
         managedServiceBuilder.getAdminBuilder().build().startServer();
 
         System.out.println("Todo Server and Admin Server started");
 
-    }
-
-    /**
-     * Enable Stats D.
-     *
-     * @param host statsD host
-     * @param port statsD port
-     */
-    public static void enableStatsD(ManagedServiceBuilder managedServiceBuilder, String host, int port) {
-        if (port < 1) throw new IllegalStateException("StatsD port must be set");
-        Objects.requireNonNull(host, "StatsD Host cannot be null");
-        if (host.isEmpty()) throw new IllegalStateException("StatsD Host name must not be empty");
-        managedServiceBuilder.getStatsDReplicatorBuilder().setHost(host).setPort(port);
-        managedServiceBuilder.setEnableStatsD(true);
-    }
-
-    /**
-     * Enable Stats D.
-     *
-     * @param uri for statsd
-     */
-    public static void enableStatsD(ManagedServiceBuilder managedServiceBuilder, URI uri) {
-        if (!uri.getScheme().equals("udp")) throw new IllegalStateException("Scheme must be udp");
-        enableStatsD(managedServiceBuilder, uri.getHost(), uri.getPort());
     }
 }

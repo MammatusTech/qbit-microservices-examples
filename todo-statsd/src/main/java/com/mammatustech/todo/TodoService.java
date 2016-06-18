@@ -1,76 +1,118 @@
 package com.mammatustech.todo;
 
-import io.advantageous.qbit.annotation.*;
+import io.advantageous.qbit.admin.ServiceManagementBundle;
+import io.advantageous.qbit.annotation.Named;
+import io.advantageous.qbit.annotation.RequestMapping;
+import io.advantageous.qbit.annotation.RequestMethod;
+import io.advantageous.qbit.annotation.RequestParam;
+import io.advantageous.qbit.annotation.http.DELETE;
+import io.advantageous.qbit.annotation.http.GET;
+import io.advantageous.qbit.annotation.http.POST;
 import io.advantageous.qbit.reactive.Callback;
-import io.advantageous.qbit.service.stats.StatsCollector;
-import io.advantageous.reakt.reactor.Reactor;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
-import static io.advantageous.qbit.annotation.QueueCallbackType.*;
 
-
+/**
+ * Default port for admin is 7777.
+ * Default port for main endpoint is 8888.
+ *
+ * <pre>
+ * <code>
+ *
+ *     Access the service:
+ *
+ *    $ curl http://localhost:8888/v1/...
+ *
+ *
+ *     To see swagger file for this service:
+ *
+ *    $ curl http://localhost:7777/__admin/meta/
+ *
+ *     To see health for this service:
+ *
+ *    $ curl http://localhost:8888/__health -v
+ *     Returns "ok" if all registered health systems are healthy.
+ *
+ *     OR if same port endpoint health is disabled then:
+ *
+ *    $ curl http://localhost:7777/__admin/ok -v
+ *     Returns "true" if all registered health systems are healthy.
+ *
+ *
+ *     A node is a service, service bundle, queue, or server endpoint that is being monitored.
+ *
+ *     List all service nodes or endpoints
+ *
+ *    $ curl http://localhost:7777/__admin/all-nodes/
+ *
+ *
+ *      List healthy nodes by name:
+ *
+ *    $ curl http://localhost:7777/__admin/healthy-nodes/
+ *
+ *      List complete node information:
+ *
+ *    $ curl http://localhost:7777/__admin/load-nodes/
+ *
+ *
+ *      Show service stats and metrics
+ *
+ *    $ curl http://localhost:8888/__stats/instance
+ * </code>
+ * </pre>
+ */
+@Named("TodoService")
 @RequestMapping("/todo-service")
 public class TodoService {
 
 
     private final Map<String, Todo> todoMap = new TreeMap<>();
 
-    /** Used to manage callbacks and such. */
-    private final Reactor reactor;
+    private final ServiceManagementBundle mgmt;
 
-    /** Stats Collector for KPIs. */
-    private final StatsCollector statsCollector;
+    public TodoService(ServiceManagementBundle mgmt) {
 
-    public TodoService(Reactor reactor, StatsCollector statsCollector) {
-        this.reactor = reactor;
-        this.statsCollector = statsCollector;
+        this.mgmt = mgmt;
 
         /** Send stat count i.am.alive every three seconds.  */
-        this.reactor.addRepeatingTask(Duration.ofSeconds(3),
-                () -> statsCollector.increment("todoservice.i.am.alive"));
+        mgmt.reactor().addRepeatingTask(Duration.ofSeconds(3),
+                () -> mgmt.increment("i.am.alive"));
 
-        this.reactor.addRepeatingTask(Duration.ofSeconds(1), statsCollector::clientProxyFlush);
     }
 
 
-    @RequestMapping(value = "/todo", method = RequestMethod.POST)
+    @POST(value = "/todo")
     public void add(final Callback<Boolean> callback, final Todo todo) {
 
-        /** Send KPI add.called every time the add method gets called. */
-        statsCollector.increment("todoservice.add.called");
+        /** Send KPI add called every time the add method gets called. */
+        mgmt.increment("add.called");
         todoMap.put(todo.getId(), todo);
         callback.accept(true);
     }
 
 
-
-    @RequestMapping(value = "/todo", method = RequestMethod.DELETE)
+    @DELETE(value = "/todo")
     public void remove(final Callback<Boolean> callback, final @RequestParam("id") String id) {
 
         /** Send KPI add.removed every time the remove method gets called. */
-        statsCollector.increment("todoservice.remove.called");
+        mgmt.increment("remove.called");
         Todo remove = todoMap.remove(id);
-        callback.accept(remove!=null);
+        callback.accept(remove != null);
 
     }
 
 
-
-    @RequestMapping(value = "/todo", method = RequestMethod.GET)
+    @GET(value = "/todo", method = RequestMethod.GET)
     public void list(final Callback<ArrayList<Todo>> callback) {
 
         /** Send KPI add.list every time the list method gets called. */
-        statsCollector.increment("todoservice.list.called");
+        mgmt.increment("list.called");
 
         callback.accept(new ArrayList<>(todoMap.values()));
-    }
-
-
-    @QueueCallback({EMPTY, IDLE, LIMIT})
-    public void process() {
-        reactor.process();
     }
 
 

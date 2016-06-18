@@ -69,9 +69,9 @@ public class HelloWorldService {
 
 
         /* Start the service. */
-        managedServiceBuilder.addEndpointService(new HelloWorldService())
-                .getEndpointServerBuilder()
-                .build().startServer();
+        managedServiceBuilder.addEndpointService(new HelloWorldService()).startApplication();
+
+
 
         /* Start the admin builder which exposes health end-points and meta data. */
         managedServiceBuilder.getAdminBuilder().build().startServer();
