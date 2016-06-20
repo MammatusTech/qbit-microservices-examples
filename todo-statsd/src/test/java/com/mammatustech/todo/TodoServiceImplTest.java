@@ -77,12 +77,13 @@ public class TodoServiceImplTest {
         final TodoService todoServiceImpl = new TodoServiceImpl(serviceManagementBundle);
 
 
-        return ServiceBuilder.serviceBuilder().setServiceObject(todoServiceImpl).addQueueCallbackHandler(new QueueCallBackHandler() {
-            @Override
-            public void queueProcess() {
-                serviceManagementBundle.process();
-            }
-        })
+        return ServiceBuilder.serviceBuilder().setServiceObject(todoServiceImpl).addQueueCallbackHandler(
+                new QueueCallBackHandler() {
+                    @Override
+                    public void queueProcess() {
+                        serviceManagementBundle.process();
+                    }
+                })
                 .buildAndStartAll()
                 .createProxyWithAutoFlush(TodoService.class, 50, TimeUnit.MILLISECONDS);
 
